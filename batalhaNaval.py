@@ -19,16 +19,28 @@ def colocar_navios(matriz, quantidade, count):
     for i in range(quantidade):
         while True:
             try:
-                entrada = input(f"Escolha a posição inicial do seu navio (x y): ")
+                entrada = input(f"Escolha a posição inicial do seu navio (x y) com {count} posicoes: ")
                 saida = input(f"escolha a posicao final do seu navio (x,y): ")
                 x, y = map(int, entrada.split())
                 xf, yf = map(int, saida.split())
                 if (0 <= x < len(matriz) and 0 <= y < len(matriz)) and (0 <= xf < len(matriz) and 0 <= yf < len(matriz)):
                     if matriz[x][y] == "-":
-                        if (x == xf) and (yf - y == count) :
+                        if (x == xf) and (yf - y == count):
                             for i in range(count):
                                 matriz[x][(y + i)] = "N"
                                 var = f"{x}, {y + i}"
+                                posicao.append(var)
+                            break
+                        elif (yf == y) and (xf - x == count):
+                            for i in range(count):
+                                matriz[(x + i)][y] = "N"
+                                var = f"{x + i}, {y}"
+                                posicao.append(var)
+                            break
+                        elif (x == y) and (xf == yf) and (xf - x == count):
+                            for i in range(count):
+                                matriz[(x + i)][y + i] = "N"
+                                var = f"{x + i}, {y + i}"
                                 posicao.append(var)
                             break
                         else:
