@@ -15,6 +15,7 @@ def navios():
         count -= 1
         mostrar_matriz(matriz)
 
+
 def colocar_navios(matriz, quantidade, count):
     for i in range(quantidade):
         while True:
@@ -25,23 +26,27 @@ def colocar_navios(matriz, quantidade, count):
                 xf, yf = map(int, saida.split())
                 if (0 <= x < len(matriz) and 0 <= y < len(matriz)) and (0 <= xf < len(matriz) and 0 <= yf < len(matriz)):
                     if matriz[x][y] == "-":
-                        if (x == xf) and (yf - y == count):
-                            for i in range(count):
+                        posicao = []
+                        if (x == xf) and (yf - y == (count - 1)):
+                            for i in range((count)):
                                 matriz[x][(y + i)] = "N"
                                 var = f"{x}, {y + i}"
                                 posicao.append(var)
+                            posicaoTotal.append(posicao)
                             break
-                        elif (yf == y) and (xf - x == count):
-                            for i in range(count):
+                        elif (yf == y) and (xf - x == (count - 1)):
+                            for i in range((count)):
                                 matriz[(x + i)][y] = "N"
                                 var = f"{x + i}, {y}"
                                 posicao.append(var)
+                            posicaoTotal.append(posicao)
                             break
-                        elif (x == y) and (xf == yf) and (xf - x == count):
-                            for i in range(count):
+                        elif (x == y) and (xf == yf) and (xf - x == (count - 1)):
+                            for i in range((count)):
                                 matriz[(x + i)][y + i] = "N"
                                 var = f"{x + i}, {y + i}"
                                 posicao.append(var)
+                            posicaoTotal.append(posicao)
                             break
                         else:
                             print("o tamanho do barco esta diferente do numero de posicoes")
@@ -55,9 +60,10 @@ def colocar_navios(matriz, quantidade, count):
 # Programa principal
 h = 5
 w = 10
-posicao = []
+posicaoTotal = []
 matriz = criar_matriz(h, w)
 mostrar_matriz(matriz)
 navios()
-print(posicao)
-#atualmente eu faco a lista e armazeno as posicoes, agora tenho que fazer o seguinte, validacao das posicoes E comecar o jogo contra o bot
+print(posicaoTotal)
+# preciso fazer a posicao ser mais especifica
+#comecar o jogo contra o bot
