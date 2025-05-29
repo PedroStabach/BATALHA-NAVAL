@@ -1,6 +1,6 @@
 ##defs
-def criar_matriz(tamanho):
-    return [["-" for _ in range(tamanho)] for _ in range(tamanho)]
+def criar_matriz(h,w):
+    return [["-" for _ in range(w)] for _ in range(h)]
 
 def mostrar_matriz(matriz):
     for linha in matriz:
@@ -25,12 +25,14 @@ def colocar_navios(matriz, quantidade, count):
                 xf, yf = map(int, saida.split())
                 if (0 <= x < len(matriz) and 0 <= y < len(matriz)) and (0 <= xf < len(matriz) and 0 <= yf < len(matriz)):
                     if matriz[x][y] == "-":
-                        if x == xf:
+                        if (x == xf) and (yf - y == count) :
                             for i in range(count):
                                 matriz[x][(y + i)] = "N"
                                 var = f"{x}, {y + i}"
                                 posicao.append(var)
-                        break
+                            break
+                        else:
+                            print("o tamanho do barco esta diferente do numero de posicoes")
                     else:
                         print("Já existe um navio nessa posição. Tente novamente.")
                 else:
@@ -39,9 +41,10 @@ def colocar_navios(matriz, quantidade, count):
                 print("Entrada inválida. Digite dois números separados por espaço.")
 
 # Programa principal
-tamanho = 10
+h = 5
+w = 10
 posicao = []
-matriz = criar_matriz(tamanho)
+matriz = criar_matriz(h, w)
 mostrar_matriz(matriz)
 navios()
 print(posicao)
