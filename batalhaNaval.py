@@ -12,63 +12,59 @@ def navios():
     count = 4
     counter = 4
     for i in range(3):
+        ## PLAYER
         print(f"Escolha o navio com {count} posições")
         colocar_navios(matriz, count)
         count -= 1
         mostrar_matriz(matriz)
-
     for i in range(3):
-        print(f"Bot está posicionando navio com {counter} posições...")
-        escolhas_bot(bot_matriz, counter)
+        ## BOT
+        escolhas_bot(matriz_bot, counter)
         counter -= 1
-        mostrar_matriz(bot_matriz)
 
 def colocar_navios(matriz, count):
     while True:
         try:
             entrada = input(f"Escolha a posição inicial do seu navio (x y) com {count} posições: ")
-            saida = input("Escolha a posição final do seu navio (x y): ")
+            saida = input(f"Escolha a posição final do seu navio (x y): ")
             x, y = map(int, entrada.split())
             xf, yf = map(int, saida.split())
 
-            if (0 <= x < h and 0 <= y < w and 0 <= xf < h and 0 <= yf < w):
-                if (x == xf):
-                    if abs(yf - y) == count - 1:
-                        menor = min(y, yf)
-                        if menor + count - 1 < w:
-                            if all(matriz[x][menor + i] == "-" for i in range(count)):
-                                posicao = []
-                                for i in range(count):
-                                    matriz[x][menor + i] = "N"
-                                    posicao.append(f"{x}, {menor + i}")
-                                posicaoTotal.append(posicao)
-                                break
-                elif (y == yf):
-                    if abs(xf - x) == count - 1:
-                        menor = min(x, xf)
-                        if menor + count - 1 < h:
-                            if all(matriz[menor + i][y] == "-" for i in range(count)):
-                                posicao = []
-                                for i in range(count):
-                                    matriz[menor + i][y] = "N"
-                                    posicao.append(f"{menor + i}, {y}")
-                                posicaoTotal.append(posicao)
-                                break
-                elif abs(xf - x) == count - 1 and abs(yf - y) == count - 1:
-                    menor_x = min(x, xf)
-                    menor_y = min(y, yf)
-                    if menor_x + count - 1 < h and menor_y + count - 1 < w:
-                        if all(matriz[menor_x + i][menor_y + i] == "-" for i in range(count)):
-                            posicao = []
-                            for i in range(count):
-                                matriz[menor_x + i][menor_y + i] = "N"
-                                posicao.append(f"{menor_x + i}, {menor_y + i}")
-                            posicaoTotal.append(posicao)
-                            break
+            if x > xf:
+                x, xf = xf, x
+            if y > yf:
+                y, yf = yf, y
+
+            if (0 <= x < len(matriz) and 0 <= y < len(matriz[0]) and 
+                0 <= xf < len(matriz) and 0 <= yf < len(matriz[0])):
+
+                if matriz[x][y] == "-":
+                    posicao = []
+
+                    if (x == xf) and abs(yf - y) == count - 1:
+                        for i in range(count):
+                            matriz[x][y + i] = "N"
+                            posicao.append(f"{x}, {y + i}")
+                        posicaoTotal.append(posicao)
+                        break
+                    elif (y == yf) and abs(xf - x) == count - 1:
+                        for i in range(count):
+                            matriz[x + i][y] = "N"
+                            posicao.append(f"{x + i}, {y}")
+                        posicaoTotal.append(posicao)
+                        break
+                    elif abs(xf - x) == count - 1 and abs(yf - y) == count - 1:
+                        for i in range(count):
+                            matriz[x + i][y + i] = "N"
+                            posicao.append(f"{x + i}, {y + i}")
+                        posicaoTotal.append(posicao)
+                        break
+                    else:
+                        print("O tamanho do barco está diferente do número de posições.")
                 else:
-                    print("O tamanho ou direção do barco está incorreto.")
+                    print("Já existe um navio nessa posição. Tente novamente.")
             else:
-                print("Coordenadas fora dos limites. Tente novamente.")
+                print("Coordenadas fora do limite. Tente novamente.")
         except ValueError:
             print("Entrada inválida. Digite dois números separados por espaço.")
 
@@ -76,40 +72,83 @@ def escolhas_bot(matriz, count):
     while True:
         x = random.randint(0, h - 1)
         y = random.randint(0, w - 1)
-        direcao = random.choice(['H', 'V', 'D'])  # H: horizontal, V: vertical, D: diagonal
+        orientacao = random.choice(["H", "V", "D"]) 
 
-        if direcao == 'H' and y + count - 1 < w:
+        posicao = []
+
+        if orientacao == "H" and y + count <= w:
             if all(matriz[x][y + i] == "-" for i in range(count)):
-                posicao = []
                 for i in range(count):
                     matriz[x][y + i] = "N"
                     posicao.append(f"{x}, {y + i}")
                 posicaoTotalBot.append(posicao)
                 break
-        elif direcao == 'V' and x + count - 1 < h:
+        elif orientacao == "V" and x + count <= h:
             if all(matriz[x + i][y] == "-" for i in range(count)):
-                posicao = []
                 for i in range(count):
                     matriz[x + i][y] = "N"
                     posicao.append(f"{x + i}, {y}")
                 posicaoTotalBot.append(posicao)
                 break
-        elif direcao == 'D' and x + count - 1 < h and y + count - 1 < w:
+        elif orientacao == "D" and x + count <= h and y + count <= w:
             if all(matriz[x + i][y + i] == "-" for i in range(count)):
-                posicao = []
                 for i in range(count):
                     matriz[x + i][y + i] = "N"
                     posicao.append(f"{x + i}, {y + i}")
                 posicaoTotalBot.append(posicao)
                 break
-
+def atirar():
+    while True:
+        try:
+            tiro = input("Onde deseja atirar (x,y): ")
+            x, y = map(int, tiro.split(" "))
+            valor = f"{x}, {y}"
+            acertou = any(valor in navio for navio in posicaoTotalBot)
+            if(acertou):
+                print("acertou")
+                for navio in posicaoTotalBot:
+                    if valor in navio:
+                        navio.remove(valor)
+            else:
+                print("errou")
+            break
+        except ValueError:
+            print("Valor fornecido fora da tabela")
+def atirarBot():
+    while True:
+        try:
+            tirox = random.radiant(0, 9)
+            tiroy = random.radiant(0, 9)
+            valor = f"{tirox}, {tiroy}"
+            acertou = any(valor in navio for navio in posicaoTotal)
+            print(f"bot atirou na posicao {valor}")
+            if(acertou):
+                print("Bot acertou")
+                for navio in posicaoTotal:
+                    if valor in navio:
+                        navio.remove(valor)
+                    if not navio:
+                        posicaoTotal.remove(navio)
+                
+            else:
+                print("Bot errou")
+            break
+        except ValueError:
+            print("bot escolheu errado")
+def jogar():
+    while True:
+        atirar()
+        atirarBot()
+        print(posicaoTotal)
+        print(posicaoTotalBot)
 # Programa principal
-h = 5
+h = 10
 w = 10
 posicaoTotal = []
 posicaoTotalBot = []
-matriz = criar_matriz(h, w)
-bot_matriz = criar_matriz(h, w)
+
+matriz = criar_matriz(h, w)     
+matriz_bot = criar_matriz(h, w)   
 
 mostrar_matriz(matriz)
 navios()
@@ -117,4 +156,7 @@ navios()
 print("Posições dos navios do jogador:")
 print(posicaoTotal)
 print("Posições dos navios do bot:")
-print(posicaoTotalBot)
+print(posicaoTotalBot) 
+
+## comecar jogo
+jogar()
