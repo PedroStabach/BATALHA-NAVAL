@@ -109,6 +109,8 @@ def atirar():
                 for navio in posicaoTotalBot:
                     if valor in navio:
                         navio.remove(valor)
+                        if not navio:
+                        posicaoTotalBot.remove(navio)
             else:
                 print("errou")
             break
@@ -129,7 +131,6 @@ def atirarBot():
                         navio.remove(valor)
                     if not navio:
                         posicaoTotal.remove(navio)
-                
             else:
                 print("Bot errou")
             break
