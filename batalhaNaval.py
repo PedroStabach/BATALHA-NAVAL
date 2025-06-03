@@ -72,7 +72,7 @@ def escolhas_bot(matriz, count):
     while True:
         x = random.randint(0, h - 1)
         y = random.randint(0, w - 1)
-        orientacao = random.choice(["H", "V", "D"]) 
+        orientacao = random.choice(["H", "V"])
 
         posicao = []
 
@@ -90,66 +90,76 @@ def escolhas_bot(matriz, count):
                     posicao.append(f"{x + i}, {y}")
                 posicaoTotalBot.append(posicao)
                 break
-        elif orientacao == "D" and x + count <= h and y + count <= w:
-            if all(matriz[x + i][y + i] == "-" for i in range(count)):
-                for i in range(count):
-                    matriz[x + i][y + i] = "N"
-                    posicao.append(f"{x + i}, {y + i}")
-                posicaoTotalBot.append(posicao)
-                break
+
 def atirar():
     while True:
         try:
-            tiro = input("Onde deseja atirar (x,y): ")
-            x, y = map(int, tiro.split(" "))
+            tiro = input("Onde deseja atirar (x, y): ")
+            x, y = map(int, tiro.split(","))
+            if not (0 <= x < h and 0 <= y < w):
+                print("Coordenadas fora dos limites.")
+                continue
             valor = f"{x}, {y}"
             acertou = any(valor in navio for navio in posicaoTotalBot)
-            if(acertou):
-                print("acertou")
+            if acertou:
+                print("Acertou!")
                 for navio in posicaoTotalBot:
                     if valor in navio:
                         navio.remove(valor)
                         if not navio:
-                        posicaoTotalBot.remove(navio)
+                            posicaoTotalBot.remove(navio)
+                matriz_bot[x][y] = "X"
             else:
-                print("errou")
+                print("Errou!")
+                matriz_bot[x][y] = "O"
             break
         except ValueError:
-            print("Valor fornecido fora da tabela")
+            print("Entrada inválida. Use o formato: x, y")
+
 def atirarBot():
     while True:
-        try:
-            tirox = random.radiant(0, 9)
-            tiroy = random.radiant(0, 9)
-            valor = f"{tirox}, {tiroy}"
-            acertou = any(valor in navio for navio in posicaoTotal)
-            print(f"bot atirou na posicao {valor}")
-            if(acertou):
-                print("Bot acertou")
-                for navio in posicaoTotal:
-                    if valor in navio:
-                        navio.remove(valor)
+        tirox = random.randint(0, h - 1)
+        tiroy = random.randint(0, w - 1)
+        valor = f"{tirox}, {tiroy}"
+        print(f"Bot atirou na posição {valor}")
+        acertou = any(valor in navio for navio in posicaoTotal)
+        if acertou:
+            print("Bot acertou!")
+            for navio in posicaoTotal:
+                if valor in navio:
+                    navio.remove(valor)
                     if not navio:
                         posicaoTotal.remove(navio)
-            else:
-                print("Bot errou")
-            break
-        except ValueError:
-            print("bot escolheu errado")
+            matriz[tirox][tiroy] = "X"
+        else:
+            print("Bot errou!")
+            matriz[tirox][tiroy] = "O"
+        break
+
 def jogar():
-    while True:
+    while posicaoTotal and posicaoTotalBot:
+        mostrar_matriz(matriz)
+        print("Sua vez:")
         atirar()
+        if not posicaoTotalBot:
+            print("Parabéns! Você venceu!")
+            break
+        print("\nVez do bot:")
         atirarBot()
-        print(posicaoTotal)
-        print(posicaoTotalBot)
+        if not posicaoTotal:
+            print("O bot venceu! Fim de jogo.")
+            break
+        print(f"Seus navios restantes: {sum(len(n) for n in posicaoTotal)}")
+        print(f"Navios do bot restantes: {sum(len(n) for n in posicaoTotalBot)}")
+
 # Programa principal
 h = 10
 w = 10
 posicaoTotal = []
 posicaoTotalBot = []
 
-matriz = criar_matriz(h, w)     
-matriz_bot = criar_matriz(h, w)   
+matriz = criar_matriz(h, w)
+matriz_bot = criar_matriz(h, w)
 
 mostrar_matriz(matriz)
 navios()
@@ -157,7 +167,7 @@ navios()
 print("Posições dos navios do jogador:")
 print(posicaoTotal)
 print("Posições dos navios do bot:")
-print(posicaoTotalBot) 
+print(posicaoTotalBot)
 
-## comecar jogo
+# Começar o jogo
 jogar()
