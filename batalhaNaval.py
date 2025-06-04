@@ -108,10 +108,10 @@ def atirar():
                         navio.remove(valor)
                         if not navio:
                             posicaoTotalBot.remove(navio)
-                matriz_bot[x][y] = "X"
+                matriz_tiro_player[x][y] = "X"
             else:
                 print("Errou!")
-                matriz_bot[x][y] = "O"
+                matriz_tiro_player[x][y] = "O"
             break
         except ValueError:
             print("Entrada inválida. Use o formato: x, y")
@@ -138,7 +138,7 @@ def atirarBot():
 
 def jogar():
     while posicaoTotal and posicaoTotalBot:
-        mostrar_matriz(matriz)
+        mostrar_matriz(matriz_tiro_player)
         print("Sua vez:")
         atirar()
         if not posicaoTotalBot:
@@ -149,8 +149,10 @@ def jogar():
         if not posicaoTotal:
             print("O bot venceu! Fim de jogo.")
             break
-        print(f"Seus navios restantes: {sum(len(n) for n in posicaoTotal)}")
-        print(f"Navios do bot restantes: {sum(len(n) for n in posicaoTotalBot)}")
+        sumLenPlayer = len(posicaoTotal)
+        sumLenBot = len(posicaoTotalBot)
+        print(f"Seus navios restantes: {sumLenPlayer}")
+        print(f"Navios do bot restantes: {sumLenBot}")
 
 # Programa principal
 h = 10
@@ -160,14 +162,10 @@ posicaoTotalBot = []
 
 matriz = criar_matriz(h, w)
 matriz_bot = criar_matriz(h, w)
-
+matriz_tiro_player = criar_matriz(h,w)
+matriz_tiro_bot = criar_matriz(h,w)
 mostrar_matriz(matriz)
 navios()
-
-print("Posições dos navios do jogador:")
-print(posicaoTotal)
-print("Posições dos navios do bot:")
-print(posicaoTotalBot)
 
 # Começar o jogo
 jogar()
