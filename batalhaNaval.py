@@ -9,15 +9,15 @@ def mostrar_matriz(matriz):
     print()
 
 def navios():
-    count = 4
-    counter = 4
-    for i in range(3):
+    count = 5
+    counter = 5
+    for i in range(5):
         ## PLAYER
         print(f"Escolha o navio com {count} posições")
         colocar_navios(matriz, count)
         count -= 1
         mostrar_matriz(matriz)
-    for i in range(3):
+    for i in range(5):
         ## BOT
         escolhas_bot(matriz_bot, counter)
         counter -= 1
@@ -130,10 +130,10 @@ def atirarBot():
                     navio.remove(valor)
                     if not navio:
                         posicaoTotal.remove(navio)
-            matriz[tirox][tiroy] = "X"
+            matriz_tiro_bot[tirox][tiroy] = "X"
         else:
             print("Bot errou!")
-            matriz[tirox][tiroy] = "O"
+            matriz_tiro_bot[tirox][tiroy] = "O"
         break
 
 def jogar():
@@ -146,6 +146,7 @@ def jogar():
             break
         print("\nVez do bot:")
         atirarBot()
+        mostrar_matriz(matriz_tiro_bot)
         if not posicaoTotal:
             print("O bot venceu! Fim de jogo.")
             break
