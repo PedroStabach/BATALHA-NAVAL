@@ -1,5 +1,4 @@
 import random
-
 def criar_matriz(h, w):
     return [["-" for _ in range(w)] for _ in range(h)]
 
@@ -109,10 +108,11 @@ def atirar():
                         if not navio:
                             posicaoTotalBot.remove(navio)
                 matriz_tiro_player[x][y] = "X"
+                break
             else:
                 print("Errou!")
                 matriz_tiro_player[x][y] = "O"
-            break
+                break
         except ValueError:
             print("Entrada inválida. Use o formato: x, y")
 
